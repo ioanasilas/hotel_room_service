@@ -1,0 +1,3 @@
+userID, username, passwordHash, role, contactInfo, loyaltyPoints, preferences
+1, johndoe, abc123hash, standard, john@example.com, 120, "Late Check-in"
+2, adminuser, xyz456hash, admin, admin@example.com, , 
