@@ -3,7 +3,7 @@
 #include <fstream>
 #include <sstream>
 
-Hotel::Hotel() : numRooms(0) {}
+//Hotel::Hotel() : numRooms(0) {}
 
 void Hotel::loadRoomsFromCSV(const std::string& filename) {
     std::cout << "Loading rooms from file: " << filename << "\n"; // Debugging output
