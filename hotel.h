@@ -1,18 +1,25 @@
-// Hotel.h
+//hotel.h
 #ifndef HOTEL_H
 #define HOTEL_H
 
-#include "Room.h"
-#include "Booking.h"
 #include <string>
+#include "Room.h"
 
 class Hotel {
 private:
-    std::string name;
-    // Other attributes as needed
+    Room rooms[MAX_ROOMS];
+    int numRooms;
+
 public:
-    // Constructor
-    // Methods for managing rooms and bookings
+    Hotel();
+    void loadRoomsFromCSV(const std::string& filename);
+    void displayRooms() const;
+    void displayRoomDetails(int roomID) const;
+    int searchRoomsByCriteria(double maxPrice, bool availableOnly, Room* results) const;
+    int getNumRooms() const;
 };
 
-#endif
+void displayMenu();
+void printRoomDetails(const Room& room);
+
+#endif // HOTEL_H

@@ -1,20 +1,16 @@
-// Room.h
+//Room.h
 #ifndef ROOM_H
 #define ROOM_H
 
 #include <string>
 
-class Room {
-private:
+const int MAX_ROOMS = 100; // Maximum number of rooms the hotel can have
+
+struct Room {
     int roomID;
-    std::string type;
-    bool seaview;
-    bool available;
-    std::string status; // booked, available
-    // Additional attributes as needed
-public:
-    // Constructor
-    // Methods for updating room status
+    std::string features;
+    double price;
+    bool availability;
 };
 
-#endif
+#endif // ROOM_H
