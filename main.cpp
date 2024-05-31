@@ -30,8 +30,11 @@ public:
     // Admin functionalities
     bool isAdminPasswordCorrect(const std::string& password) const;
     void closeRoomForReservation(int roomID);
+    void openRoomForReservation(int roomID);
     void addRoom(const Room& newRoom);
     void saveRoomsToCSV(const std::string& filename) const;
+    void modifyRoomFeatures(int roomID, const std::string& newFeatures);
+    void modifyRoomPrice(int roomID, double newPrice);
 };
 
 void Hotel::loadRoomsFromCSV(const std::string& filename) {
@@ -132,7 +135,28 @@ void Hotel::closeRoomForReservation(int roomID) {
     std::cout << "Room with ID " << roomID << " not found.\n";
 }
 
+void Hotel::openRoomForReservation(int roomID) {
+    for (int i = 0; i < numRooms; ++i) {
+        if (rooms[i].roomID == roomID) {
+            rooms[i].availability = true; // Set availability to true
+            std::cout << "Room " << roomID << " opened for reservations.\n";
+            saveRoomsToCSV("rooms.csv"); // Save changes to CSV after modifying room availability
+            return;
+        }
+    }
+    std::cout << "Room with ID " << roomID << " not found.\n";
+}
+
 void Hotel::addRoom(const Room& newRoom) {
+    // Check if a room with the same ID already exists
+    for (int i = 0; i < numRooms; ++i) {
+        if (rooms[i].roomID == newRoom.roomID) {
+            std::cout << "Room with ID " << newRoom.roomID << " already exists. Cannot add duplicate room.\n";
+            return;
+        }
+    }
+
+    // Add the new room if there is no duplicate
     if (numRooms < MAX_ROOMS) {
         rooms[numRooms] = newRoom;
         ++numRooms;
@@ -162,6 +186,30 @@ void Hotel::saveRoomsToCSV(const std::string& filename) const {
     }
 
     file.close();
+}
+
+void Hotel::modifyRoomFeatures(int roomID, const std::string& newFeatures) {
+    for (int i = 0; i < numRooms; ++i) {
+        if (rooms[i].roomID == roomID) {
+            rooms[i].features = newFeatures;
+            std::cout << "Features for room " << roomID << " updated successfully.\n";
+            saveRoomsToCSV("rooms.csv"); // Save changes to CSV after modifying room features
+            return;
+        }
+    }
+    std::cout << "Room with ID " << roomID << " not found.\n";
+}
+
+void Hotel::modifyRoomPrice(int roomID, double newPrice) {
+    for (int i = 0; i < numRooms; ++i) {
+        if (rooms[i].roomID == roomID) {
+            rooms[i].price = newPrice;
+            std::cout << "Price for room " << roomID << " updated successfully.\n";
+            saveRoomsToCSV("rooms.csv"); // Save changes to CSV after modifying room price
+            return;
+        }
+    }
+    std::cout << "Room with ID " << roomID << " not found.\n";
 }
 
 void displayMenu() {
@@ -251,8 +299,11 @@ int main() {
                     do {
                         std::cout << "\nStaff Menu:\n";
                         std::cout << "1. Close Room for Reservation\n";
-                        std::cout << "2. Add New Room\n";
-                        std::cout << "3. Back to Main Menu\n";
+                        std::cout << "2. Open Room for Reservation\n";
+                        std::cout << "3. Add New Room\n";
+                        std::cout << "4. Modify Room Features\n";
+                        std::cout << "5. Modify Room Price\n";
+                        std::cout << "6. Back to Main Menu\n";
                         std::cout << "Enter your choice: ";
                         std::cin >> staffChoice;
                         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignore newline character left in input buffer
@@ -266,8 +317,15 @@ int main() {
                                 break;
                             }
                             case 2: {
+                                int roomID;
+                                std::cout << "Enter Room ID to open for reservation: ";
+                                std::cin >> roomID;
+                                hotel.openRoomForReservation(roomID);
+                                break;
+                            }
+                            case 3: {
                                 Room newRoom;
-                                std::cout << "Enter Room ID: ";
+                                std::cout << "EDGE CASE HERE!! FIX NON-NUMERIC-Enter Room ID: ";
                                 std::cin >> newRoom.roomID;
                                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                                 std::cout << "Enter Features: ";
@@ -278,14 +336,35 @@ int main() {
                                 hotel.addRoom(newRoom);
                                 break;
                             }
-                            case 3:
+                            case 4: {
+                                int roomID;
+                                std::string newFeatures;
+                                std::cout << "Enter Room ID to modify: ";
+                                std::cin >> roomID;
+                                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignore newline character left in input buffer
+                                std::cout << "Enter new features: ";
+                                std::getline(std::cin, newFeatures);
+                                hotel.modifyRoomFeatures(roomID, newFeatures);
+                                break;
+                            }
+                            case 5: {
+                                int roomID;
+                                double newPrice;
+                                std::cout << "EDGE CASE- NON NUMERÝC - Enter Room ID to modify: ";
+                                std::cin >> roomID;
+                                std::cout << "Enter new price: ";
+                                std::cin >> newPrice;
+                                hotel.modifyRoomPrice(roomID, newPrice);
+                                break;
+                            }
+                            case 6:
                                 std::cout << "Returning to Main Menu.\n";
                                 break;
                             default:
                                 std::cout << "Invalid choice. Please enter a valid option.\n";
                                 break;
                         }
-                    } while (staffChoice != 3); // Loop until staff chooses to return to main menu
+                    } while (staffChoice != 6); // Loop until staff chooses to return to main menu
                 } else {
                     std::cout << "Incorrect password. Access denied.\n";
                 }
