@@ -9,7 +9,7 @@ void addBooking(Hotel &hotel, const std::string &customerName, int roomID, const
 {
   std::vector<Booking> bookings = Utilities::readBookingsCSV("bookings.csv");
 
-  // Find the highest booking ID in the current list
+  // to find the last ID used in csv
   int maxID = 0;
   for (const auto &booking : bookings)
   {
@@ -18,7 +18,7 @@ void addBooking(Hotel &hotel, const std::string &customerName, int roomID, const
       maxID = booking.bookingID;
     }
   }
-  int newBookingID = maxID + 1; // Increment the highest ID to get a new unique ID
+  int newBookingID = maxID + 1; // to create a new ID
 
   int days = hotel.dateDifference(checkInDate, checkOutDate);
   if (days < 1 || days > 10)
@@ -32,6 +32,30 @@ void addBooking(Hotel &hotel, const std::string &customerName, int roomID, const
   {
     std::cerr << "Room not found with ID: " << roomID << "\n";
     return;
+  }
+
+  // check for overlapping bookings
+  for (const auto &booking : bookings)
+  {
+    if (booking.roomID == roomID && booking.status != "cancelled")
+    {
+      // calculate the number of days since the reference date for existing booking dates
+      int existingCheckIn = hotel.dateDifference("2024-01-01", booking.checkInDate);
+      int existingCheckOut = hotel.dateDifference("2024-01-01", booking.checkOutDate);
+
+      // calculate the number of days since the reference date for new booking dates
+      int newCheckIn = hotel.dateDifference("2024-01-01", checkInDate);
+      int newCheckOut = hotel.dateDifference("2024-01-01", checkOutDate);
+
+      // check for overlap
+      if ((newCheckIn >= existingCheckIn && newCheckIn < existingCheckOut) ||
+          (newCheckOut > existingCheckIn && newCheckOut <= existingCheckOut) ||
+          (newCheckIn <= existingCheckIn && newCheckOut >= existingCheckOut))
+      {
+        std::cerr << "Room ID " << roomID << " is already booked for the selected period.\n";
+        return;
+      }
+    }
   }
 
   double totalCost = price * days;
