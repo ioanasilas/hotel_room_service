@@ -1,5 +1,6 @@
 # Ignore all executable files
 *.exe
+*.o
 
 # Ignore specific config or temporary files
 .vscode/
