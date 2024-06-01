@@ -1,0 +1,22 @@
+# Ignore all executable files
+*.exe
+
+# Ignore specific config or temporary files
+.vscode/
+tempCodeRunnerFile.cpp
+tempCodeRunnerFile.exe
+
+# Ignore OS-generated files
+.DS_Store
+Thumbs.db
+
+# Ignore build files
+/build/
+*.log
+
+# Ignore specific directories and files
+/nvm/
+/.profile
+/.zshrc
+.zsh/completion/_mocli
+.nvm/

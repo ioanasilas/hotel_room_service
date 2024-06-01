@@ -1,25 +1,25 @@
-//hotel.h
-#ifndef HOTEL_H
-#define HOTEL_H
-
+#pragma once
 #include <string>
-#include "Room.h"
+#include <vector>
+#include "Utilities.h"
 
-class Hotel {
+const int MAX_ROOMS = 100; // max number of rooms the hotel can have
+
+class Hotel
+{
 private:
-    Room rooms[MAX_ROOMS];
-    int numRooms;
+    std::vector<Room> rooms;
 
 public:
     Hotel();
-    void loadRoomsFromCSV(const std::string& filename);
+    void loadRoomsFromCSV(const std::string &filename);
     void displayRooms() const;
     void displayRoomDetails(int roomID) const;
-    int searchRoomsByCriteria(double maxPrice, bool availableOnly, Room* results) const;
-    int getNumRooms() const;
+    int searchRoomsByCriteria(double maxPrice, bool availableOnly, Room *results) const;
+    bool isAdminPasswordCorrect(const std::string &password) const;
+    void closeRoomForReservation(int roomID);
+    void reopenRoomForReservation(int roomID);
+    void addRoom(const Room &newRoom);
+    void saveRoomsToCSV(const std::string &filename) const;
+    void printRoomDetails(const Room &room) const;
 };
-
-void displayMenu();
-void printRoomDetails(const Room& room);
-
-#endif // HOTEL_H

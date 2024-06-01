@@ -1,110 +1,124 @@
-#include "hotel.h"
+#include "Room.h"
+#include "Utilities.h"
+#include "Hotel.h"
 #include <iostream>
-#include <fstream>
-#include <sstream>
+#include <iomanip>
 
-//Hotel::Hotel() : numRooms(0) {}
+Hotel::Hotel() {}
 
-void Hotel::loadRoomsFromCSV(const std::string& filename) {
-    std::cout << "Loading rooms from file: " << filename << "\n"; // Debugging output
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Failed to open file: " << filename << "\n";
-        return;
-    }
-
-    std::string line;
-    std::getline(file, line); // Read header line (optional)
-
-    while (std::getline(file, line)) {
-        std::istringstream ss(line);
-        std::string token;
-
-        int roomID;
-        std::string features;
-        double price;
-        bool availability;
-
-        // Read room data from CSV
-        std::getline(ss, token, ',');
-        roomID = std::stoi(token);
-
-        std::getline(ss, features, ',');
-
-        std::getline(ss, token, ',');
-        price = std::stod(token);
-
-        std::getline(ss, token, ',');
-        availability = token == "1";
-
-        // Add room to hotel if capacity allows
-        if (numRooms < MAX_ROOMS) {
-            rooms[numRooms].roomID = roomID;
-            rooms[numRooms].features = features;
-            rooms[numRooms].price = price;
-            rooms[numRooms].availability = availability;
-            ++numRooms;
-        } else {
-            std::cout << "Cannot add more rooms. Hotel is at full capacity.\n";
-            break; // Exit loop if maximum rooms reached
-        }
-    }
-    file.close();
-}
-
-void Hotel::displayRooms() const {
-    for (int i = 0; i < numRooms; ++i) {
-        std::cout << "Room ID: " << rooms[i].roomID << "\n"
-                  << "Features: " << rooms[i].features << "\n"
-                  << "Price: $" << rooms[i].price << "\n"
-                  << "Availability: " << (rooms[i].availability ? "Available" : "Unavailable") << "\n"
-                  << "---------------------------\n";
+void Hotel::loadRoomsFromCSV(const std::string &filename)
+{
+    rooms = Utilities::readCSV(filename);
+    if (rooms.size() > MAX_ROOMS)
+    {
+        std::cerr << "Cannot load more than " << MAX_ROOMS << " rooms.\n";
+        rooms.resize(MAX_ROOMS);
     }
 }
 
-void Hotel::displayRoomDetails(int roomID) const {
-    for (int i = 0; i < numRooms; ++i) {
-        if (rooms[i].roomID == roomID) {
-            std::cout << "Room ID: " << rooms[i].roomID << "\n"
-                      << "Features: " << rooms[i].features << "\n"
-                      << "Price: $" << rooms[i].price << "\n"
-                      << "Availability: " << (rooms[i].availability ? "Available" : "Unavailable") << "\n";
+void Hotel::displayRooms() const
+{
+    std::cout << "Room ID | Features        | Price    | Availability\n";
+    std::cout << "---------------------------------------------------\n";
+    for (const auto &room : rooms)
+    {
+        printRoomDetails(room);
+    }
+}
+
+void Hotel::printRoomDetails(const Room &room) const
+{
+    std::cout << std::setw(7) << room.roomID << " | "
+              << std::setw(15) << room.features << " | "
+              << std::setw(8) << std::fixed << std::setprecision(2) << room.price << " | "
+              << (room.availability ? "Available" : "Unavailable") << "\n";
+}
+
+void Hotel::displayRoomDetails(int roomID) const
+{
+    for (const auto &room : rooms)
+    {
+        if (room.roomID == roomID)
+        {
+            printRoomDetails(room);
             return;
         }
     }
-    std::cout << "Room with ID " << roomID << " not found.\n";
+    std::cerr << "Room with ID " << roomID << " not found.\n";
 }
 
-int Hotel::searchRoomsByCriteria(double maxPrice, bool availableOnly, Room* results) const {
+int Hotel::searchRoomsByCriteria(double maxPrice, bool availableOnly, Room *results) const
+{
     int count = 0;
-
-    for (int i = 0; i < numRooms; ++i) {
-        if (rooms[i].price <= maxPrice && (!availableOnly || rooms[i].availability)) {
-            results[count] = rooms[i];
-            ++count;
+    for (const auto &room : rooms)
+    {
+        if (room.price <= maxPrice && (!availableOnly || room.availability))
+        {
+            results[count++] = room;
         }
     }
-
     return count;
 }
 
-void displayMenu() {
-    std::cout << "================ Hotel Booking Menu ================\n";
-    std::cout << "1. Display Rooms\n";
-    std::cout << "2. Search Rooms by Criteria\n";
-    std::cout << "3. Book a Room\n";
-    std::cout << "4. View Booking Details\n";
-    std::cout << "5. Modify or Cancel Booking\n";
-    std::cout << "6. View Hotel Facilities\n";
-    std::cout << "7. Contact Information\n";
-    std::cout << "8. Exit\n";
-    std::cout << "=====================================================\n";
+bool Hotel::isAdminPasswordCorrect(const std::string &password) const
+{
+    return password == "admin123";
 }
 
-void printRoomDetails(const Room& room) {
-    std::cout << "Room ID: " << room.roomID << "\n"
-              << "Features: " << room.features << "\n"
-              << "Price: $" << room.price << "\n"
-              << "Availability: " << (room.availability ? "Available" : "Unavailable") << "\n"
-              << "---------------------------\n";
+void Hotel::closeRoomForReservation(int roomID)
+{
+    for (auto &room : rooms)
+    {
+        if (room.roomID == roomID)
+        {
+            room.availability = false;
+            std::cout << "Room " << roomID << " closed for reservations.\n";
+            saveRoomsToCSV("rooms.csv");
+            return;
+        }
+    }
+    std::cerr << "Room with ID " << roomID << " not found.\n";
+}
+
+void Hotel::reopenRoomForReservation(int roomID)
+{
+    for (auto &room : rooms)
+    {
+        if (room.roomID == roomID)
+        {
+            room.availability = true;
+            std::cout << "Room " << roomID << " reopened for reservations.\n";
+            saveRoomsToCSV("rooms.csv");
+            return;
+        }
+    }
+    std::cerr << "Room with ID " << roomID << " not found.\n";
+}
+
+void Hotel::addRoom(const Room &newRoom)
+{
+    for (const auto &room : rooms)
+    {
+        if (room.roomID == newRoom.roomID)
+        {
+            std::cerr << "Room with ID " << newRoom.roomID << " already exists. Cannot add duplicate room ID.\n";
+            return;
+        }
+    }
+
+    if (rooms.size() < MAX_ROOMS)
+    {
+        rooms.push_back(newRoom);
+        std::cout << "Room added successfully.\n";
+        saveRoomsToCSV("rooms.csv");
+    }
+    else
+    {
+        std::cerr << "Cannot add more rooms. Hotel is at full capacity.\n";
+    }
+}
+
+void Hotel::saveRoomsToCSV(const std::string &filename) const
+{
+    Utilities::writeCSV(filename, rooms);
 }
