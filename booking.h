@@ -1,16 +1,25 @@
-// Booking.h
-#ifndef BOOKING_H
-#define BOOKING_H
-
+#pragma once
 #include <string>
+#include <vector>
 
-class Booking {
-private:
-    std::string email;
-    // Other booking details
+class Hotel; // Forward declaration of Hotel class
+
+class Booking
+{
 public:
-    // Constructor
-    // Methods for managing bookings
+    int bookingID;
+    std::string customerName;
+    int roomID;
+    std::string checkInDate;
+    std::string checkOutDate;
+    int guests;
+    double totalCost;
+    std::string status;
+
+    Booking(int id, const std::string &name, int roomId, const std::string &checkIn, const std::string &checkOut, int guestCount, double cost, const std::string &bookingStatus)
+        : bookingID(id), customerName(name), roomID(roomId), checkInDate(checkIn), checkOutDate(checkOut), guests(guestCount), totalCost(cost), status(bookingStatus) {}
 };
 
-#endif
+void addBooking(Hotel &hotel, const std::string &customerName, int roomID, const std::string &checkInDate, const std::string &checkOutDate, int guests);
+void cancelBooking(int bookingID);
+void displayBookingDetails(int bookingID);

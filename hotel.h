@@ -24,4 +24,7 @@ public:
     void modifyRoomPrice(int roomID, double newPrice);
     void saveRoomsToCSV(const std::string &filename) const;
     void printRoomDetails(const Room &room) const;
+    // new
+    double getRoomPrice(int roomID) const;
+    static int dateDifference(const std::string &startDate, const std::string &endDate);
 };

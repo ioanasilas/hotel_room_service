@@ -3,6 +3,9 @@
 #include "Hotel.h"
 #include <iostream>
 #include <iomanip>
+#include <ctime>
+#include <sstream>
+
 
 Hotel::Hotel() {}
 
@@ -146,6 +149,38 @@ void Hotel::modifyRoomPrice(int roomID, double newPrice)
         }
     }
     std::cerr << "Room with ID " << roomID << " not found.\n";
+}
+
+double Hotel::getRoomPrice(int roomID) const {
+    for (const auto& room : rooms) {
+        if (room.roomID == roomID) {
+            return room.price;
+        }
+    }
+    return 0; // return 0 if room is not found
+}
+
+
+int Hotel::dateDifference(const std::string &startDate, const std::string &endDate) {
+    std::tm start_tm = {};
+    std::tm end_tm = {};
+    
+    std::istringstream startStream(startDate);
+    std::istringstream endStream(endDate);
+
+    startStream >> std::get_time(&start_tm, "%Y-%m-%d");
+    endStream >> std::get_time(&end_tm, "%Y-%m-%d");
+    
+    std::time_t start_time = std::mktime(&start_tm);
+    std::time_t end_time = std::mktime(&end_tm);
+
+    if (start_time == -1 || end_time == -1) {
+        std::cerr << "Invalid date provided" << std::endl;
+        return 0; // handle error scenario
+    }
+
+    const double secondsPerDay = 24 * 60 * 60;
+    return static_cast<int>(difftime(end_time, start_time) / secondsPerDay);
 }
 
 void Hotel::saveRoomsToCSV(const std::string &filename) const

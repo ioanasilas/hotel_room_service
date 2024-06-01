@@ -1,4 +1,5 @@
 #include "Room.h"
+#include "Booking.h"
 #include "Utilities.h"
 #include "Hotel.h"
 #include <iostream>
@@ -10,9 +11,9 @@ void displayMenu()
     std::cout << "================ Hotel Booking Menu ================\n";
     std::cout << "1. Display Rooms\n";
     std::cout << "2. Search Rooms by Criteria\n";
-    std::cout << "3. Book a Room (Not Implemented)\n";
-    std::cout << "4. View Booking Details (Not Implemented)\n";
-    std::cout << "5. Modify or Cancel Booking (Not Implemented)\n";
+    std::cout << "3. Book a Room\n";
+    std::cout << "4. View Booking Details\n";
+    std::cout << "5. Cancel Booking\n";
     std::cout << "6. View Hotel Facilities (Not Implemented)\n";
     std::cout << "7. Contact Information (Not Implemented)\n";
     std::cout << "8. Exit\n";
@@ -62,11 +63,13 @@ int main()
             double maxPrice;
             std::cout << "Enter maximum price: ";
             std::cin >> maxPrice;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
             bool availableOnly;
-            char input;
             std::cout << "Show only available rooms? (y/n): ";
+            char input;
             std::cin >> input;
             availableOnly = (input == 'y' || input == 'Y');
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
 
             Room results[MAX_ROOMS];
             int numResults = hotel.searchRoomsByCriteria(maxPrice, availableOnly, results);
@@ -77,7 +80,46 @@ int main()
             {
                 hotel.printRoomDetails(results[i]);
             }
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
+            break;
+        }
+        case 3: // book a room
+        {
+            std::string customerName;
+            int roomID;
+            std::string checkInDate, checkOutDate;
+            int guests;
+            std::cout << "Enter customer name: ";
+            std::getline(std::cin, customerName);
+            std::cout << "Enter room ID: ";
+            std::cin >> roomID;
+            std::cin.ignore();
+            std::cout << "Enter check-in date (YYYY-MM-DD): ";
+            std::getline(std::cin, checkInDate);
+            std::cout << "Enter check-out date (YYYY-MM-DD): ";
+            std::getline(std::cin, checkOutDate);
+            std::cout << "Enter number of guests: ";
+            std::cin >> guests;
+            std::cin.ignore();
+
+            addBooking(hotel, customerName, roomID, checkInDate, checkOutDate, guests);
+            break;
+        }
+        case 4: // view booking details
+        {
+            int bookingID;
+            std::cout << "Enter booking ID: ";
+            std::cin >> bookingID;
+            std::cin.ignore();
+            displayBookingDetails(bookingID);
+            break;
+        }
+        case 5: // cancel booking
+        {
+            int bookingID;
+            std::cout << "Enter booking ID to modify or cancel: ";
+            std::cin >> bookingID;
+            std::cin.ignore();
+            cancelBooking(bookingID);
             break;
         }
         case 9:

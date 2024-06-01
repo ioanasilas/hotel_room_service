@@ -1,0 +1,3 @@
+bookingID,customerName,roomID,checkInDate,checkOutDate,guests,totalCost,status
+1,Ioaan Silas,101,2024-05-05,2024-05-09,2,800,cancelled
+2,Ivan Coolest,420,2024-12-03,2024-12-13,2,5000,confirmed
