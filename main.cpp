@@ -1,4 +1,3 @@
-
 #include "Room.h"
 #include "Utilities.h"
 #include "Hotel.h"
@@ -98,7 +97,9 @@ int main()
                     std::cout << "1. Close Room for Reservation\n";
                     std::cout << "2. Reopen Room for Reservation\n";
                     std::cout << "3. Add New Room\n";
-                    std::cout << "4. Back to Main Menu\n";
+                    std::cout << "4. Modify Room Features\n";
+                    std::cout << "5. Modify Room Price\n";
+                    std::cout << "6. Back to Main Menu\n";
                     std::cout << "Enter your choice: ";
 
                     if (!getChoice(staffChoice))
@@ -142,13 +143,37 @@ int main()
                         break;
                     }
                     case 4:
+                    {
+                        int roomID;
+                        std::string newFeatures;
+                        std::cout << "Enter Room ID for feature modification: ";
+                        std::cin >> roomID;
+                        std::cin.ignore();
+                        std::cout << "Enter new features: ";
+                        std::getline(std::cin, newFeatures);
+                        hotel.modifyRoomFeatures(roomID, newFeatures);
+                        break;
+                    }
+                    case 5:
+                    {
+                        int roomID;
+                        double newPrice;
+                        std::cout << "Enter Room ID for price modification: ";
+                        std::cin >> roomID;
+                        std::cout << "Enter new price: ";
+                        std::cin >> newPrice;
+                        hotel.modifyRoomPrice(roomID, newPrice);
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
+                        break;
+                    }
+                    case 6:
                         std::cout << "Returning to Main Menu.\n";
                         break;
                     default:
                         std::cout << "Invalid choice. Please enter a valid option.\n";
                         break;
                     }
-                } while (staffChoice != 4);
+                } while (staffChoice != 6);
             }
             else
             {

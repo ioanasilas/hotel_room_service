@@ -118,6 +118,36 @@ void Hotel::addRoom(const Room &newRoom)
     }
 }
 
+void Hotel::modifyRoomFeatures(int roomID, const std::string &newFeatures)
+{
+    for (auto &room : rooms)
+    {
+        if (room.roomID == roomID)
+        {
+            room.features = newFeatures;
+            std::cout << "Features for room " << roomID << " updated successfully.\n";
+            saveRoomsToCSV("rooms.csv");
+            return;
+        }
+    }
+    std::cerr << "Room with ID " << roomID << " not found.\n";
+}
+
+void Hotel::modifyRoomPrice(int roomID, double newPrice)
+{
+    for (auto &room : rooms)
+    {
+        if (room.roomID == roomID)
+        {
+            room.price = newPrice;
+            std::cout << "Price for room " << roomID << " updated successfully.\n";
+            saveRoomsToCSV("rooms.csv");
+            return;
+        }
+    }
+    std::cerr << "Room with ID " << roomID << " not found.\n";
+}
+
 void Hotel::saveRoomsToCSV(const std::string &filename) const
 {
     Utilities::writeCSV(filename, rooms);
