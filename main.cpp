@@ -72,7 +72,7 @@ int main()
             Room results[MAX_ROOMS];
             int numResults = hotel.searchRoomsByCriteria(maxPrice, availableOnly, results);
             std::cout << "Search Results:\n";
-            std::cout << "Room ID | Features        | Price    | Availability\n";
+            std::cout << "Room ID | Features        | Price    | Availability for rental\n";
             std::cout << "---------------------------------------------------\n";
             for (int i = 0; i < numResults; ++i)
             {

@@ -49,7 +49,7 @@ void Utilities::writeCSV(const std::string &fileName, const std::vector<Room> &r
     return;
   }
 
-  file << "roomID,features,price,availability\n";
+  file << "roomID,features,price,availability for rental\n";
   for (const Room &room : rooms)
   {
     file << room.roomID << ","
