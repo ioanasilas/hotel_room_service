@@ -14,10 +14,8 @@ void displayMenu()
     std::cout << "3. Book a Room\n";
     std::cout << "4. View Booking Details\n";
     std::cout << "5. Cancel Booking\n";
-    std::cout << "6. View Hotel Facilities (Not Implemented)\n";
-    std::cout << "7. Contact Information (Not Implemented)\n";
-    std::cout << "8. Exit\n";
-    std::cout << "9. Staff Entrance\n";
+    std::cout << "6. Exit\n";
+    std::cout << "7. Staff Entrance\n";
     std::cout << "=====================================================\n";
 }
 
@@ -122,7 +120,7 @@ int main()
             cancelBooking(bookingID);
             break;
         }
-        case 9:
+        case 7:
         {
             std::cout << "Staff Entrance:\n";
             std::string password;
@@ -223,14 +221,14 @@ int main()
             }
             break;
         }
-        case 8:
+        case 6:
             std::cout << "Exiting Hotel Booking Menu. Goodbye!\n";
             return 0; // exit from main function
         default:
             std::cout << "Invalid choice. Please enter a valid option.\n";
             break;
         }
-    } while (choice != 8);
+    } while (choice != 6);
 
     return 0;
 }
