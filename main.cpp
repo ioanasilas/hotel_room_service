@@ -134,8 +134,8 @@ int main()
                 do
                 {
                     std::cout << "\nStaff Menu:\n";
-                    std::cout << "1. Close Room for Reservation\n";
-                    std::cout << "2. Reopen Room for Reservation\n";
+                    std::cout << "1. Close Room for Renovation\n";
+                    std::cout << "2. Reopen Room for Renovation\n";
                     std::cout << "3. Add New Room\n";
                     std::cout << "4. Modify Room Features\n";
                     std::cout << "5. Modify Room Price\n";
@@ -152,18 +152,18 @@ int main()
                     case 1:
                     {
                         int roomID;
-                        std::cout << "Enter Room ID to close for reservation: ";
+                        std::cout << "Enter Room ID to close for renovation: ";
                         std::cin >> roomID;
-                        hotel.closeRoomForReservation(roomID);
+                        hotel.closeRoomForRenovation(roomID);
                         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
                         break;
                     }
                     case 2:
                     {
                         int roomID;
-                        std::cout << "Enter Room ID to reopen for reservation: ";
+                        std::cout << "Enter Room ID to reopen for renovation: ";
                         std::cin >> roomID;
-                        hotel.reopenRoomForReservation(roomID);
+                        hotel.reopenRoomForRenovation(roomID);
                         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
                         break;
                     }

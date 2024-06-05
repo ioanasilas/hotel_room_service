@@ -68,14 +68,14 @@ bool Hotel::isAdminPasswordCorrect(const std::string &password) const
     return password == "admin123";
 }
 
-void Hotel::closeRoomForReservation(int roomID)
+void Hotel::closeRoomForRenovation(int roomID)
 {
     for (auto &room : rooms)
     {
         if (room.roomID == roomID)
         {
             room.availability = false;
-            std::cout << "Room " << roomID << " closed for reservations.\n";
+            std::cout << "Room " << roomID << " closed for renovation.\n";
             saveRoomsToCSV("rooms.csv");
             return;
         }
@@ -83,14 +83,14 @@ void Hotel::closeRoomForReservation(int roomID)
     std::cerr << "Room with ID " << roomID << " not found.\n";
 }
 
-void Hotel::reopenRoomForReservation(int roomID)
+void Hotel::reopenRoomForRenovation(int roomID)
 {
     for (auto &room : rooms)
     {
         if (room.roomID == roomID)
         {
             room.availability = true;
-            std::cout << "Room " << roomID << " reopened for reservations.\n";
+            std::cout << "Room " << roomID << " reopened for renovations.\n";
             saveRoomsToCSV("rooms.csv");
             return;
         }

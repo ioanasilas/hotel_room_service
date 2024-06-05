@@ -17,8 +17,8 @@ public:
     void displayRoomDetails(int roomID) const;
     int searchRoomsByCriteria(double maxPrice, bool availableOnly, Room *results) const;
     bool isAdminPasswordCorrect(const std::string &password) const;
-    void closeRoomForReservation(int roomID);
-    void reopenRoomForReservation(int roomID);
+    void closeRoomForRenovation(int roomID);
+    void reopenRoomForRenovation(int roomID);
     void addRoom(const Room &newRoom);
     void modifyRoomFeatures(int roomID, const std::string &newFeatures);
     void modifyRoomPrice(int roomID, double newPrice);
