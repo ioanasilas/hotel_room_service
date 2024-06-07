@@ -2,22 +2,34 @@
 #include "Booking.h"
 #include "Utilities.h"
 #include "Hotel.h"
+#include "user_management.h"
 #include <iostream>
 #include <limits>
 #include <cctype> // for std::isdigit
-#include "hotel.h"
 
-void displayMenu()
+void displayMenu(bool isLoggedIn)
 {
     std::cout << "================ Hotel Booking Menu ================\n";
-    std::cout << "1. Display Rooms\n";
-    std::cout << "2. Search Rooms by Criteria\n";
-    std::cout << "3. Book a Room\n";
-    std::cout << "4. View Booking Details\n";
-    std::cout << "5. Cancel Booking\n";
-    std::cout << "6. Exit\n";
-    std::cout << "7. Staff Entrance\n";
+    if (isLoggedIn)
+    {
+        std::cout << "1. Display Rooms\n";
+        std::cout << "2. Search Rooms by Criteria\n";
+        std::cout << "3. Book a Room\n";
+        std::cout << "4. View Booking Details\n";
+        std::cout << "5. Cancel Booking\n";
+    }
+    else
+    {
+        std::cout << "6. User Registration\n";
+        std::cout << "7. User Login\n";
+        std::cout << "8. Staff Entrance\n";
+    }
+    std::cout << "9. Exit\n";
     std::cout << "=====================================================\n";
+    if (!isLoggedIn)
+    {
+        std::cout << "Please log in to see other available options.\n";
+    }
 }
 
 bool getChoice(int &choice)
@@ -40,16 +52,25 @@ int main()
 {
     Hotel hotel;
     hotel.loadRoomsFromCSV("rooms.csv");
+    bool isLoggedIn = false;
+    bool isAdmin = false;
+    std::string loggedInUser;
 
     int choice;
     do
     {
-        displayMenu();
+        displayMenu(isLoggedIn);
         std::cout << "Enter your choice: ";
 
         if (!getChoice(choice))
         {
             continue; // if invalid input ==> display the menu again
+        }
+
+        if (!isLoggedIn && (choice >= 1 && choice <= 5))
+        {
+            std::cout << "Please log in to access this option.\n";
+            continue;
         }
 
         switch (choice)
@@ -62,20 +83,24 @@ int main()
             double maxPrice;
             bool validInput = false;
 
-                do {
-                    std::cout << "Enter maximum price: ";
-                    std::cin >> maxPrice;
+            do
+            {
+                std::cout << "Enter maximum price: ";
+                std::cin >> maxPrice;
 
-                    if (std::cin.fail() || maxPrice <= 0) {
-                        std::cin.clear(); // clear error flag
-                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // discard input buffer
-                        std::cout << "Invalid input. Please enter a positive number.\n";
-                    } else {
-                        validInput = true;
-                    }
+                if (std::cin.fail() || maxPrice <= 0)
+                {
+                    std::cin.clear();                                                   // clear error flag
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // discard input buffer
+                    std::cout << "Invalid input. Please enter a positive number.\n";
+                }
+                else
+                {
+                    validInput = true;
+                }
 
-                } while (!validInput);
-            
+            } while (!validInput);
+
             bool availableOnly;
             std::cout << "Show only available rooms? (y/n): ";
             char input;
@@ -96,24 +121,21 @@ int main()
         }
         case 3: // book a room
         {
-            std::string customerName;
             int roomID;
             std::string checkInDate, checkOutDate;
             int guests;
-            std::cout << "Enter customer name: ";
-            std::getline(std::cin, customerName);
             std::cout << "Enter room ID: ";
             std::cin >> roomID;
-            std::cin.ignore();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
             std::cout << "Enter check-in date (YYYY-MM-DD): ";
             std::getline(std::cin, checkInDate);
             std::cout << "Enter check-out date (YYYY-MM-DD): ";
             std::getline(std::cin, checkOutDate);
             std::cout << "Enter number of guests: ";
             std::cin >> guests;
-            std::cin.ignore();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
 
-            addBooking(hotel, customerName, roomID, checkInDate, checkOutDate, guests);
+            addBooking(hotel, loggedInUser, roomID, checkInDate, checkOutDate, guests);
             break;
         }
         case 4: // view booking details
@@ -121,8 +143,8 @@ int main()
             int bookingID;
             std::cout << "Enter booking ID: ";
             std::cin >> bookingID;
-            std::cin.ignore();
-            displayBookingDetails(bookingID);
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
+            displayBookingDetails(bookingID, loggedInUser, isAdmin);
             break;
         }
         case 5: // cancel booking
@@ -130,11 +152,33 @@ int main()
             int bookingID;
             std::cout << "Enter booking ID to modify or cancel: ";
             std::cin >> bookingID;
-            std::cin.ignore();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
             cancelBooking(bookingID);
             break;
         }
-        case 7:
+        case 6: // User Registration
+        {
+            displayUserMenu();
+            break;
+        }
+        case 7: // User Login
+        {
+            std::string firstName, lastName;
+            std::cout << "Enter First Name: ";
+            std::cin >> firstName;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
+            std::cout << "Enter Last Name: ";
+            std::cin >> lastName;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
+
+            if (loginUser("users.csv", firstName, lastName))
+            {
+                isLoggedIn = true;
+                loggedInUser = firstName + " " + lastName;
+            }
+            break;
+        }
+        case 8: // Staff Entrance
         {
             std::cout << "Staff Entrance:\n";
             std::string password;
@@ -144,6 +188,7 @@ int main()
 
             if (hotel.isAdminPasswordCorrect(password))
             {
+                isAdmin = true;
                 int staffChoice;
                 do
                 {
@@ -152,7 +197,8 @@ int main()
                     std::cout << "2. Add New Room\n";
                     std::cout << "3. Modify Room Features\n";
                     std::cout << "4. Modify Room Price\n";
-                    std::cout << "5. Back to Main Menu\n";
+                    std::cout << "5. View All Bookings\n";
+                    std::cout << "6. Back to Main Menu\n";
                     std::cout << "Enter your choice: ";
 
                     if (!getChoice(staffChoice))
@@ -168,7 +214,7 @@ int main()
                         hotel.updateRoomStatus(roomIDs);
                         break;
                     }
-            
+
                     case 2:
                     {
                         Room newRoom;
@@ -190,7 +236,7 @@ int main()
                         std::string newFeatures;
                         std::cout << "Enter Room ID for feature modification: ";
                         std::cin >> roomID;
-                        std::cin.ignore();
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
                         std::cout << "Enter new features: ";
                         std::getline(std::cin, newFeatures);
                         hotel.modifyRoomFeatures(roomID, newFeatures);
@@ -204,18 +250,21 @@ int main()
                         std::cin >> roomID;
                         std::cout << "Enter new price: ";
                         std::cin >> newPrice;
-                        hotel.modifyRoomPrice(roomID, newPrice);
                         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
+                        hotel.modifyRoomPrice(roomID, newPrice);
                         break;
                     }
                     case 5:
+                        displayUserBookings("", true); // Admin views all bookings
+                        break;
+                    case 6:
                         std::cout << "Returning to Main Menu.\n";
                         break;
                     default:
                         std::cout << "Invalid choice. Please enter a valid option.\n";
                         break;
                     }
-                } while (staffChoice != 5);
+                } while (staffChoice != 6);
             }
             else
             {
@@ -223,14 +272,14 @@ int main()
             }
             break;
         }
-        case 6:
+        case 9: // Exit
             std::cout << "Exiting Hotel Booking Menu. Goodbye!\n";
             return 0; // exit from main function
         default:
             std::cout << "Invalid choice. Please enter a valid option.\n";
             break;
         }
-    } while (choice != 6);
+    } while (choice != 9);
 
     return 0;
 }

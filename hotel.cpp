@@ -199,11 +199,3 @@ void Hotel::updateRoomStatus(const std::vector<int>& roomIDs)
     }
     saveRoomsToCSV("rooms.csv");
 }
-
-void Hotel::closeRoomForRenovation(int roomID) {
-    // Dummy implementation
-}
-
-void Hotel::reopenRoomForRenovation(int roomID) {
-    // Dummy implementation
-}

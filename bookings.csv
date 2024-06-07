@@ -5,3 +5,4 @@ bookingID,customerName,roomID,checkInDate,checkOutDate,guests,totalCost,status
 4,Code Blocks,420,2024-06-01,2024-06-05,3,2000,cancelled
 5,Vlad Vraja,101,2024-12-01,2024-12-05,2,800,confirmed
 6,el habibi,104,2024-06-07,2024-06-09,1,440,confirmed
+7,Florin Alb,101,2022-01-01,2022-01-03,2,532,confirmed

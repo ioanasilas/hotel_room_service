@@ -95,24 +95,51 @@ void cancelBooking(int bookingID)
   }
 }
 
-void displayBookingDetails(int bookingID)
+void displayBookingDetails(int bookingID, const std::string &loggedInUser, bool isAdmin)
 {
   std::vector<Booking> bookings = Utilities::readBookingsCSV("bookings.csv");
   auto it = std::find_if(bookings.begin(), bookings.end(), [bookingID](const Booking &b)
                          { return b.bookingID == bookingID; });
   if (it != bookings.end())
   {
-    std::cout << "Booking ID: " << it->bookingID << "\n"
-              << "Customer Name: " << it->customerName << "\n"
-              << "Room ID: " << it->roomID << "\n"
-              << "Check-In Date: " << it->checkInDate << "\n"
-              << "Check-Out Date: " << it->checkOutDate << "\n"
-              << "Guests: " << it->guests << "\n"
-              << "Total Cost: $" << it->totalCost << "\n"
-              << "Status: " << it->status << "\n";
+    if (isAdmin || it->customerName == loggedInUser)
+    {
+      std::cout << "Booking ID: " << it->bookingID << "\n"
+                << "Customer Name: " << it->customerName << "\n"
+                << "Room ID: " << it->roomID << "\n"
+                << "Check-In Date: " << it->checkInDate << "\n"
+                << "Check-Out Date: " << it->checkOutDate << "\n"
+                << "Guests: " << it->guests << "\n"
+                << "Total Cost: $" << it->totalCost << "\n"
+                << "Status: " << it->status << "\n";
+    }
+    else
+    {
+      std::cout << "Access denied. You can only view your own bookings.\n";
+    }
   }
   else
   {
     std::cout << "No booking found with ID: " << bookingID << "\n";
+  }
+}
+
+// for users
+void displayUserBookings(const std::string &customerName, bool isAdmin)
+{
+  std::vector<Booking> bookings = Utilities::readBookingsCSV("bookings.csv");
+
+  std::cout << "Booking Details:\n";
+  std::cout << "Booking ID | Customer Name | Room ID | Check-In Date | Check-Out Date | Guests | Total Cost | Status\n";
+  std::cout << "------------------------------------------------------------------------------------------------------\n";
+
+  for (const auto &booking : bookings)
+  {
+    if (isAdmin || booking.customerName == customerName)
+    {
+      std::cout << booking.bookingID << " | " << booking.customerName << " | " << booking.roomID << " | "
+                << booking.checkInDate << " | " << booking.checkOutDate << " | " << booking.guests << " | $"
+                << booking.totalCost << " | " << booking.status << "\n";
+    }
   }
 }
