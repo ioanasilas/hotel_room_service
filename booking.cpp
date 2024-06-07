@@ -9,6 +9,11 @@ void addBooking(Hotel &hotel, const std::string &customerName, int roomID, const
 {
   std::vector<Booking> bookings = Utilities::readBookingsCSV("bookings.csv");
 
+  if (!hotel.isRoomAvailable(roomID))
+    {
+        std::cerr << "Room ID " << roomID << " is not available for rental.\n";
+        return;
+    }
   // to find the last ID used in csv
   int maxID = 0;
   for (const auto &booking : bookings)
@@ -63,36 +68,44 @@ void addBooking(Hotel &hotel, const std::string &customerName, int roomID, const
 
   bookings.push_back(newBooking);
   Utilities::writeBookingsCSV("bookings.csv", bookings);
-  std::cout << "Booking added successfully.\n";
+  std::cout << "Booking added successfully. Total cost: $" << totalCost << "\n";
 }
 
-void cancelBooking(int bookingID)
+void cancelBooking(const std::string &loggedInUser, int bookingID)
 {
-  std::vector<Booking> bookings = Utilities::readBookingsCSV("bookings.csv");
-  auto it = std::find_if(bookings.begin(), bookings.end(), [bookingID](const Booking &b)
-                         { return b.bookingID == bookingID; });
+    std::vector<Booking> bookings = Utilities::readBookingsCSV("bookings.csv");
+    auto it = std::find_if(bookings.begin(), bookings.end(), [bookingID](const Booking &b) {
+        return b.bookingID == bookingID;
+    });
 
-  if (it != bookings.end())
-  {
-    char confirmation;
-    std::cout << "Are you sure you want to cancel the booking with ID " << bookingID << "? This operation is irreversible. (y/n): ";
-    std::cin >> confirmation;
-
-    if (confirmation == 'y' || confirmation == 'Y')
+    if (it != bookings.end())
     {
-      it->status = "cancelled";
-      Utilities::writeBookingsCSV("bookings.csv", bookings);
-      std::cout << "Booking cancelled successfully. We hope you'll be back!\n";
+        if (it->customerName == loggedInUser)
+        {
+            char confirmation;
+            std::cout << "Are you sure you want to cancel the booking with ID " << bookingID << "? This operation is irreversible. (y/n): ";
+            std::cin >> confirmation;
+
+            if (confirmation == 'y' || confirmation == 'Y')
+            {
+                it->status = "cancelled";
+                Utilities::writeBookingsCSV("bookings.csv", bookings);
+                std::cout << "Booking cancelled successfully. We hope you'll be back!\n";
+            }
+            else
+            {
+                std::cout << "Cancellation aborted.\n";
+            }
+        }
+        else
+        {
+            std::cout << "You can only cancel your own bookings.\n";
+        }
     }
     else
     {
-      std::cout << "Cancellation aborted.\n";
+        std::cout << "Booking ID not found.\n";
     }
-  }
-  else
-  {
-    std::cout << "Booking ID not found.\n";
-  }
 }
 
 void displayBookingDetails(int bookingID, const std::string &loggedInUser, bool isAdmin)

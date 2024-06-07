@@ -153,7 +153,7 @@ int main()
             std::cout << "Enter booking ID to modify or cancel: ";
             std::cin >> bookingID;
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
-            cancelBooking(bookingID);
+            cancelBooking(loggedInUser, bookingID);
             break;
         }
         case 6: // User Registration

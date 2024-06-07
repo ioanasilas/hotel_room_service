@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include "Utilities.h"
-#include "Room.h" // Ensure Room class is included
+#include "Room.h"
 
 const int MAX_ROOMS = 100; // max number of rooms the hotel can have
 
@@ -30,4 +30,5 @@ public:
     void reopenRoomForRenovation(int roomID);
     double getRoomPrice(int roomID) const;
     static int dateDifference(const std::string &startDate, const std::string &endDate);
+    bool isRoomAvailable(int roomID);
 };

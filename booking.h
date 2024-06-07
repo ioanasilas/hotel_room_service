@@ -22,6 +22,6 @@ public:
 };
 
 void addBooking(Hotel &hotel, const std::string &customerName, int roomID, const std::string &checkInDate, const std::string &checkOutDate, int guests);
-void cancelBooking(int bookingID);
+void cancelBooking(const std::string &loggedInUser, int bookingID);
 void displayBookingDetails(int bookingID, const std::string &loggedInUser, bool isAdmin);
 void displayUserBookings(const std::string &customerName, bool isAdmin);

@@ -30,10 +30,7 @@ void Hotel::displayRooms() const
 
 void Hotel::printRoomDetails(const Room &room) const
 {
-    std::cout << std::setw(7) << room.roomID << " | "
-              << std::setw(15) << room.features << " | "
-              << std::setw(8) << std::fixed << std::setprecision(2) << room.price << " | "
-              << (room.availability ? "Available" : "Unavailable") << "\n";
+    std::cout << room;
 }
 
 void Hotel::displayRoomDetails(int roomID) const
@@ -88,6 +85,18 @@ void Hotel::addRoom(const Room &newRoom)
     {
         std::cerr << "Cannot add more rooms. Hotel is at full capacity.\n";
     }
+}
+
+bool Hotel::isRoomAvailable(int roomID)
+{
+    for (const auto &room : rooms)
+    {
+        if (room.roomID == roomID)
+        {
+            return room.availability;
+        }
+    }
+    return false;
 }
 
 void Hotel::modifyRoomFeatures(int roomID, const std::string &newFeatures)
@@ -177,7 +186,7 @@ std::vector<int> Hotel::getRoomIDsInput()
     return roomIDs;
 }
 
-void Hotel::updateRoomStatus(const std::vector<int>& roomIDs)
+void Hotel::updateRoomStatus(const std::vector<int> &roomIDs)
 {
     for (const int roomID : roomIDs)
     {
