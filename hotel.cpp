@@ -1,5 +1,6 @@
 #include "Hotel.h"
 #include "Utilities.h"
+#include "Room.h"
 #include <iostream>
 #include <iomanip>
 #include <ctime>
