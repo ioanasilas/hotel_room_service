@@ -60,9 +60,22 @@ int main()
         case 2:
         {
             double maxPrice;
-            std::cout << "Enter maximum price: ";
-            std::cin >> maxPrice;
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
+            bool validInput = false;
+
+                do {
+                    std::cout << "Enter maximum price: ";
+                    std::cin >> maxPrice;
+
+                    if (std::cin.fail() || maxPrice <= 0) {
+                        std::cin.clear(); // clear error flag
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // discard input buffer
+                        std::cout << "Invalid input. Please enter a positive number.\n";
+                    } else {
+                        validInput = true;
+                    }
+
+                } while (!validInput);
+            
             bool availableOnly;
             std::cout << "Show only available rooms? (y/n): ";
             char input;

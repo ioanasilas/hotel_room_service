@@ -1,6 +1,5 @@
-#include "Room.h"
-#include "Utilities.h"
 #include "Hotel.h"
+#include "Utilities.h"
 #include <iostream>
 #include <iomanip>
 #include <ctime>
@@ -65,53 +64,6 @@ int Hotel::searchRoomsByCriteria(double maxPrice, bool availableOnly, Room *resu
 bool Hotel::isAdminPasswordCorrect(const std::string &password) const
 {
     return password == "admin123";
-}
-
-
-void Hotel::updateRoomStatus(int roomID)
-{
-    for (auto &room : rooms)
-    {
-        if (room.roomID == roomID)
-        {
-            room.availability = !room.availability;
-            std::cout << "Room " << roomID << " status updated to " << (room.availability ? "available" : "unavailable") << ".\n";
-            saveRoomsToCSV("rooms.csv");
-            return;
-        }
-    }
-    std::cerr << "Room with ID " << roomID << " not found.\n";
-}
-
-
-void Hotel::closeRoomForRenovation(int roomID)
-{
-    for (auto &room : rooms)
-    {
-        if (room.roomID == roomID)
-        {
-            room.availability = false;
-            std::cout << "Room " << roomID << " closed for renovation.\n";
-            saveRoomsToCSV("rooms.csv");
-            return;
-        }
-    }
-    std::cerr << "Room with ID " << roomID << " not found.\n";
-}
-
-void Hotel::reopenRoomForRenovation(int roomID)
-{
-    for (auto &room : rooms)
-    {
-        if (room.roomID == roomID)
-        {
-            room.availability = true;
-            std::cout << "Room " << roomID << " reopened for renovations.\n";
-            saveRoomsToCSV("rooms.csv");
-            return;
-        }
-    }
-    std::cerr << "Room with ID " << roomID << " not found.\n";
 }
 
 void Hotel::addRoom(const Room &newRoom)
@@ -206,4 +158,51 @@ int Hotel::dateDifference(const std::string &startDate, const std::string &endDa
 void Hotel::saveRoomsToCSV(const std::string &filename) const
 {
     Utilities::writeCSV(filename, rooms);
+}
+
+std::vector<int> Hotel::getRoomIDsInput()
+{
+    std::vector<int> roomIDs;
+    std::string input;
+    std::cout << "Enter room IDs (separated by space): ";
+    std::getline(std::cin, input);
+
+    std::stringstream ss(input);
+    int id;
+    while (ss >> id)
+    {
+        roomIDs.push_back(id);
+    }
+    return roomIDs;
+}
+
+void Hotel::updateRoomStatus(const std::vector<int>& roomIDs)
+{
+    for (const int roomID : roomIDs)
+    {
+        bool found = false;
+        for (auto &room : rooms)
+        {
+            if (room.roomID == roomID)
+            {
+                room.availability = !room.availability;
+                std::cout << "Room " << roomID << " status updated to " << (room.availability ? "available" : "unavailable") << ".\n";
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+        {
+            std::cerr << "Room with ID " << roomID << " not found.\n";
+        }
+    }
+    saveRoomsToCSV("rooms.csv");
+}
+
+void Hotel::closeRoomForRenovation(int roomID) {
+    // Dummy implementation
+}
+
+void Hotel::reopenRoomForRenovation(int roomID) {
+    // Dummy implementation
 }

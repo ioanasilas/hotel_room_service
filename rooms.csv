@@ -2,9 +2,11 @@ roomID,features,price,availability for rental
 101,Standard,200,0
 102,Deluxe,150,1
 103,Executive Suite,250,1
-420,Big Pool,500,1
-104,Big TV,220,0
+420,No pool,500,1
+104,Big TV,220,1
 330,IGKMS,230,1
 656,Comfy Beds,400,1
-222,Very Big Huge,1000,1
+222,degis pls,1000,1
 333,Smallish,50,0
+666,94,250,1
+0,,2.52962e-321,1
