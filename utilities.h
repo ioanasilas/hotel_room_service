@@ -2,6 +2,7 @@
 #define UTILITIES_H
 
 #include "Room.h"
+#include "user_management.h"
 #include <vector>
 #include <string>
 
@@ -11,6 +12,9 @@ class Booking;
 class Utilities
 {
 public:
+    // for users
+    static std::vector<User> readUsersCSV(const std::string &fileName);
+    static void writeUsersCSV(const std::string &fileName, const std::vector<User> &users);
     // for general hotel stuff
     static std::vector<Room> readCSV(const std::string &fileName);
     static void writeCSV(const std::string &fileName, const std::vector<Room> &rooms);

@@ -1,9 +1,54 @@
 #include "Utilities.h"
 #include "Room.h"
 #include "Booking.h"
+#include "user_management.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
+
+
+// user data
+std::vector<User> readUsers(const std::string &filename)
+{
+    std::vector<User> users;
+    std::ifstream file(filename);
+    std::string line, firstName, lastName;
+
+    if (!file.is_open())
+    {
+        std::cerr << "Failed to open file: " << filename << std::endl;
+        return users;
+    }
+
+    while (std::getline(file, line))
+    {
+        std::istringstream iss(line);
+        if (std::getline(iss, firstName, ',') && std::getline(iss, lastName))
+        {
+            users.emplace_back(firstName, lastName);
+        }
+    }
+
+    file.close();
+    return users;
+}
+
+void writeUsers(const std::string &filename, const std::vector<User> &users)
+{
+    std::ofstream file(filename);
+    if (!file.is_open())
+    {
+        std::cerr << "Failed to open file for writing: " << filename << std::endl;
+        return;
+    }
+
+    for (const auto &user : users)
+    {
+        file << user.firstName << "," << user.lastName << "\n";
+    }
+
+    file.close();
+}
 
 // Read Room data from CSV
 std::vector<Room> Utilities::readCSV(const std::string &fileName)

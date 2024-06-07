@@ -16,49 +16,6 @@ bool User::isValid() const
     return !firstName.empty() && !lastName.empty();
 }
 
-std::vector<User> readUsers(const std::string &filename)
-{
-    std::vector<User> users;
-    std::ifstream file(filename);
-    std::string line, firstName, lastName;
-
-    if (!file.is_open())
-    {
-        std::cerr << "Failed to open file: " << filename << std::endl;
-        return users;
-    }
-
-    while (std::getline(file, line))
-    {
-        std::istringstream iss(line);
-        if (std::getline(iss, firstName, ',') && std::getline(iss, lastName))
-        {
-            users.emplace_back(firstName, lastName);
-        }
-    }
-
-    file.close();
-    return users;
-}
-
-void writeUsers(const std::string &filename, const std::vector<User> &users)
-{
-    std::ofstream file(filename);
-    if (!file.is_open())
-    {
-        std::cerr << "Failed to open file for writing: " << filename << std::endl;
-        return;
-    }
-
-    for (const auto &user : users)
-    {
-        file << user.firstName << "," << user.lastName << "\n";
-    }
-
-    file.close();
-}
-
-
 bool registerUser(const std::string &filename, const User &newUser)
 {
     auto users = readUsers(filename);
