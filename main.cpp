@@ -5,6 +5,7 @@
 #include <iostream>
 #include <limits>
 #include <cctype> // for std::isdigit
+#include "hotel.h"
 
 void displayMenu()
 {
@@ -134,12 +135,11 @@ int main()
                 do
                 {
                     std::cout << "\nStaff Menu:\n";
-                    std::cout << "1. Close Room for Renovation\n";
-                    std::cout << "2. Reopen Room for Renovation\n";
-                    std::cout << "3. Add New Room\n";
-                    std::cout << "4. Modify Room Features\n";
-                    std::cout << "5. Modify Room Price\n";
-                    std::cout << "6. Back to Main Menu\n";
+                    std::cout << "1. Update Room Status\n";
+                    std::cout << "2. Add New Room\n";
+                    std::cout << "3. Modify Room Features\n";
+                    std::cout << "4. Modify Room Price\n";
+                    std::cout << "5. Back to Main Menu\n";
                     std::cout << "Enter your choice: ";
 
                     if (!getChoice(staffChoice))
@@ -151,23 +151,12 @@ int main()
                     {
                     case 1:
                     {
-                        int roomID;
-                        std::cout << "Enter Room ID to close for renovation: ";
-                        std::cin >> roomID;
-                        hotel.closeRoomForRenovation(roomID);
-                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
+                        std::vector<int> roomIDs = hotel.getRoomIDsInput(); // Function to get room IDs
+                        hotel.updateRoomStatus(roomIDs);
                         break;
                     }
+            
                     case 2:
-                    {
-                        int roomID;
-                        std::cout << "Enter Room ID to reopen for renovation: ";
-                        std::cin >> roomID;
-                        hotel.reopenRoomForRenovation(roomID);
-                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
-                        break;
-                    }
-                    case 3:
                     {
                         Room newRoom;
                         std::cout << "Enter Room ID: ";
@@ -182,7 +171,7 @@ int main()
                         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
                         break;
                     }
-                    case 4:
+                    case 3:
                     {
                         int roomID;
                         std::string newFeatures;
@@ -194,7 +183,7 @@ int main()
                         hotel.modifyRoomFeatures(roomID, newFeatures);
                         break;
                     }
-                    case 5:
+                    case 4:
                     {
                         int roomID;
                         double newPrice;
@@ -206,14 +195,14 @@ int main()
                         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear input buffer
                         break;
                     }
-                    case 6:
+                    case 5:
                         std::cout << "Returning to Main Menu.\n";
                         break;
                     default:
                         std::cout << "Invalid choice. Please enter a valid option.\n";
                         break;
                     }
-                } while (staffChoice != 6);
+                } while (staffChoice != 5);
             }
             else
             {

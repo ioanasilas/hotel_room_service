@@ -3,8 +3,8 @@ roomID,features,price,availability for rental
 102,Deluxe,150,1
 103,Executive Suite,250,1
 420,Big Pool,500,1
-104,Big TV,220,1
-330,Balcony,230,1
+104,Big TV,220,0
+330,IGKMS,230,1
 656,Comfy Beds,400,1
 222,Very Big Huge,1000,1
-333,Smallish,50,1
+333,Smallish,50,0

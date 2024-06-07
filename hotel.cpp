@@ -67,6 +67,23 @@ bool Hotel::isAdminPasswordCorrect(const std::string &password) const
     return password == "admin123";
 }
 
+
+void Hotel::updateRoomStatus(int roomID)
+{
+    for (auto &room : rooms)
+    {
+        if (room.roomID == roomID)
+        {
+            room.availability = !room.availability;
+            std::cout << "Room " << roomID << " status updated to " << (room.availability ? "available" : "unavailable") << ".\n";
+            saveRoomsToCSV("rooms.csv");
+            return;
+        }
+    }
+    std::cerr << "Room with ID " << roomID << " not found.\n";
+}
+
+
 void Hotel::closeRoomForRenovation(int roomID)
 {
     for (auto &room : rooms)
