@@ -1,4 +1,4 @@
-# Hotel Management System
+# Hotel Motel Holiday Inn
 ## File Structure
 
 ### Hotel.h
